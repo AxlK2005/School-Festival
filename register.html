@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/baasatrakuza" defer></script>
+    <script src="app.js" defer></script>
+    <title>商品登録</title>
+</head>
+
+<body>
+    <header>
+        <h1>商品登録</h1>
+        <nav>
+            <a href="index.html">ホーム</a> | <a href="cashier.html">レジ</a> | <a href="sales.html">販売履歴</a>
+        </nav>
+    </header>
+    <form id="register-form">
+        <input type="text" id="productName" placeholder="商品名">
+        <input type="number" id="productPrice" placeholder="価格">
+        <input type="number" id="productQuantity" placeholder="数量">
+        <button type="button" onclick="registerProduct()">登録</button>
+    </form>
+</body>
+
+</html>
