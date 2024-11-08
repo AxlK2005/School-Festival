@@ -160,9 +160,16 @@ function renderSalesHistory(salesData) {
     salesData.forEach(sale => {
         const saleElement = document.createElement("div");
         saleElement.classList.add("sale-entry");
+
+        // Parse the items string back into an array
+        const items = JSON.parse(sale.attributes.items);
+
+        // Format the items
+        const itemsDetails = items.map(item => `${item.name} - ¥${item.price}`).join('<br>')
+
         saleElement.innerHTML = `
             <p>${new Date(sale.attributes.timestamp).toLocaleString()}</p>
-            <p>${sale.attributes.items}</p>
+            <p>${itemsDetails}</p>
             <p>合計: ¥${sale.attributes.total}</p>
         `;
         salesHistory.appendChild(saleElement);
