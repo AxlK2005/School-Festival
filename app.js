@@ -5,13 +5,14 @@ async function initApp() {
     try {
         await initSDK();
         renderHeader();
-        loadProductList();
-        loadSalesHistory();
+        await loadProductList();
+        await loadSalesHistory();
     } catch (error) {
         console.error("Initialization failed", error);
     }
 }
 
+// Initialize SDK
 async function initSDK() {
     RKZ.config.appAuthUsername = '93af461084793fe02a394f7efb844716';
     RKZ.config.appAuthPassword = '7e38pBSP';
@@ -19,8 +20,7 @@ async function initSDK() {
     console.log('SDK initialized successfully');
 }
 
-
-// Render header dynamically
+// Render Header
 function renderHeader() {
     const header = document.querySelector("header");
     header.innerHTML = `
@@ -42,7 +42,7 @@ async function registerProduct() {
     const price = parseFloat(document.getElementById("productPrice").value);
     const quantity = parseInt(document.getElementById("productQuantity").value);
 
-    if (!name || isNaN(price) || price <= 0 || isNaN(quantity) || quantity <= 0) {
+    if (!validateProductInput(name, price, quantity)) {
         alert("すべての項目を正しく入力してください");
         return;
     }
@@ -51,18 +51,20 @@ async function registerProduct() {
         await RKZ.Data.add({
             object_id: 'product',
             name,
-            attributes: {
-                price,
-                quantity
-            }
+            attributes: { price, quantity }
         });
         alert("商品を登録しました！");
         document.getElementById("register-form").reset();
-        loadProductList();
+        await loadProductList();
     } catch (error) {
         console.error("商品登録に失敗しました", error);
         alert("商品登録に失敗しました。");
     }
+}
+
+// Validate Product Input
+function validateProductInput(name, price, quantity) {
+    return name && !isNaN(price) && price > 0 && !isNaN(quantity) && quantity > 0;
 }
 
 // Load Products
@@ -99,13 +101,15 @@ function addToCart(productId, productName, price) {
     alert(`${productName} をカートに追加しました`);
 }
 
+// Format Date
 function formatDate(date) {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}`;
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
 // Checkout Process
@@ -118,11 +122,7 @@ async function checkout() {
     }
 
     try {
-        // Convert items array into a JSON string before saving
-        const formattedItems = JSON.stringify(cart.map(item => ({
-            name: item.name,
-            price: item.price
-        })));
+        const formattedItems = JSON.stringify(cart.map(item => ({ name: item.name, price: item.price })));
 
         await RKZ.Data.add({
             object_id: 'sales',
@@ -135,7 +135,7 @@ async function checkout() {
         });
         alert(`会計が完了しました！合計: ¥${total}`);
         cart = [];
-        loadProductList();
+        await loadProductList();
     } catch (error) {
         console.error("会計に失敗しました", error);
         alert("会計に失敗しました。再試行してください。");
@@ -161,11 +161,8 @@ function renderSalesHistory(salesData) {
         const saleElement = document.createElement("div");
         saleElement.classList.add("sale-entry");
 
-        // Parse the items string back into an array
         const items = JSON.parse(sale.attributes.items);
-
-        // Format the items
-        const itemsDetails = items.map(item => `${item.name} - ¥${item.price}`).join('<br>')
+        const itemsDetails = getItemDetails(items);
 
         saleElement.innerHTML = `
             <p>${new Date(sale.attributes.timestamp).toLocaleString()}</p>
@@ -174,4 +171,19 @@ function renderSalesHistory(salesData) {
         `;
         salesHistory.appendChild(saleElement);
     });
+}
+
+function getItemDetails(items) {
+    const itemCounts = items.reduce((acc, item) => {
+        if (acc[item.name]) {
+            acc[item.name].count += 1;
+        } else {
+            acc[item.name] = { price: item.price, count: 1 };
+        }
+        return acc;
+    }, {});
+
+    return Object.entries(itemCounts)
+        .map(([name, { price, count }]) => `${name} - ¥${price} x ${count}`)
+        .join('<br>');
 }
