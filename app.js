@@ -124,7 +124,7 @@ async function checkout() {
             attributes: {
                 items: cart,
                 total,
-                timestamp: formatDate(new Date())
+                timestamp: formatDate(new Date()),
             }
         });
         alert(`会計が完了しました！合計: ¥${total}`);
@@ -155,7 +155,8 @@ function renderSalesHistory(salesData) {
         const saleElement = document.createElement("div");
         saleElement.classList.add("sale-entry");
         saleElement.innerHTML = `
-            <p>日時: ${new Date(sale.attributes.timestamp).toLocaleString()}</p>
+            <p>${new Date(sale.attributes.timestamp).toLocaleString()}</p>
+            <p>${sale.attributes.items}</p>
             <p>合計: ¥${sale.attributes.total}</p>
         `;
         salesHistory.appendChild(saleElement);
