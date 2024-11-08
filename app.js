@@ -38,9 +38,7 @@ function renderHeader() {
 
 // Product Registration
 async function registerProduct() {
-    const name = document.getElementById("productName").value.trim();
-    const price = parseFloat(document.getElementById("productPrice").value);
-    const quantity = parseInt(document.getElementById("productQuantity").value);
+    const { name, price, quantity } = getProductInput();
 
     if (!validateProductInput(name, price, quantity)) {
         alert("すべての項目を正しく入力してください");
@@ -48,11 +46,7 @@ async function registerProduct() {
     }
 
     try {
-        await RKZ.Data.add({
-            object_id: 'product',
-            name,
-            attributes: { price, quantity }
-        });
+        await addProductToDatabase(name, price, quantity);
         alert("商品を登録しました！");
         document.getElementById("register-form").reset();
         await loadProductList();
@@ -62,12 +56,28 @@ async function registerProduct() {
     }
 }
 
+function getProductInput() {
+    return {
+        name: document.getElementById("productName").value.trim(),
+        price: parseFloat(document.getElementById("productPrice").value),
+        quantity: parseInt(document.getElementById("productQuantity").value)
+    };
+}
+
 // Validate Product Input
 function validateProductInput(name, price, quantity) {
     return name && !isNaN(price) && price > 0 && !isNaN(quantity) && quantity > 0;
 }
 
-// Load Products
+async function addProductToDatabase(name, price, quantity) {
+    await RKZ.Data.add({
+        object_id: 'product',
+        name,
+        attributes: { price, quantity }
+    });
+}
+
+// Load and Render Products
 async function loadProductList() {
     try {
         const products = await RKZ.Data.query('product').find();
@@ -77,7 +87,6 @@ async function loadProductList() {
     }
 }
 
-// Render Product List
 function renderProductList(products) {
     const productList = document.getElementById("product-list");
     productList.innerHTML = '';
@@ -87,6 +96,7 @@ function renderProductList(products) {
         productElement.classList.add("product-item");
         productElement.innerHTML = `
             <span>${product.name} - ¥${product.attributes.price}</span>
+            <input type="number" min="1" value="1" class="quantity-input" id="quantity-${product.code}" placeholder="数量">
             <button class="add-to-cart-btn" onclick="addToCart('${product.code}', '${product.name}', ${product.attributes.price})">追加</button>
         `;
         productList.appendChild(productElement);
@@ -97,24 +107,52 @@ function renderProductList(products) {
 let cart = [];
 
 function addToCart(productId, productName, price) {
-    cart.push({ id: productId, name: productName, price });
-    alert(`${productName} をカートに追加しました`);
+    const quantity = getQuantityInput(productId);
+
+    if (quantity <= 0) {
+        alert("正しい数量を入力してください");
+        return;
+    }
+
+    addItemToCart(productId, productName, price, quantity);
+    alert(`${productName} を ${quantity}個カートに追加しました`);
+    renderCart();
 }
 
-// Format Date
-function formatDate(date) {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+function getQuantityInput(productId) {
+    return parseInt(document.getElementById(`quantity-${productId}`).value);
+}
+
+function addItemToCart(productId, productName, price, quantity) {
+    for (let i = 0; i < quantity; i++) {
+        cart.push({ id: productId, name: productName, price });
+    }
+}
+
+// Render Cart
+function renderCart() {
+    const cartSection = document.getElementById("cart");
+    cartSection.innerHTML = cart.length === 0 ? '<p>カートは空です</p>' : formatCartItems();
+}
+
+function formatCartItems() {
+    const itemCounts = cart.reduce((acc, item) => {
+        if (acc[item.name]) {
+            acc[item.name].count += 1;
+        } else {
+            acc[item.name] = { price: item.price, count: 1 };
+        }
+        return acc;
+    }, {});
+
+    return Object.entries(itemCounts)
+        .map(([name, { price, count }]) => `<p>${name} - ¥${price} x ${count}</p>`)
+        .join('');
 }
 
 // Checkout Process
 async function checkout() {
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    const total = calculateTotal();
 
     if (total === 0) {
         alert("カートに商品がありません");
@@ -122,17 +160,7 @@ async function checkout() {
     }
 
     try {
-        const formattedItems = JSON.stringify(cart.map(item => ({ name: item.name, price: item.price })));
-
-        await RKZ.Data.add({
-            object_id: 'sales',
-            name: "会計データ",
-            attributes: {
-                items: formattedItems,
-                total,
-                timestamp: formatDate(new Date()),
-            }
-        });
+        await processCheckout(total);
         alert(`会計が完了しました！合計: ¥${total}`);
         cart = [];
         await loadProductList();
@@ -142,38 +170,62 @@ async function checkout() {
     }
 }
 
-// Load Sales History
+function calculateTotal() {
+    return cart.reduce((sum, item) => sum + item.price, 0);
+}
+
+async function processCheckout(total) {
+    await RKZ.Data.add({
+        object_id: 'sales',
+        name: "会計データ",
+        attributes: {
+            items: JSON.stringify(cart.map(item => ({ name: item.name, price: item.price }))),
+            total,
+            timestamp: formatDate(new Date())
+        }
+    });
+}
+
+// Sales History Management
 async function loadSalesHistory() {
     try {
-        const dataResult = await RKZ.Data.query('sales').asc('timestamp').find();
-        renderSalesHistory(dataResult.data);
+        const salesData = await RKZ.Data.query('sales').asc('timestamp').find();
+        renderSalesHistory(salesData.data);
     } catch (error) {
         console.error("販売履歴の取得に失敗しました", error);
     }
 }
 
-// Render Sales History
 function renderSalesHistory(salesData) {
     const salesHistory = document.getElementById("sales-history");
+    const overallSales = document.getElementById("overall-sales");
     salesHistory.innerHTML = '';
 
+    let totalSalesAmount = 0;
     salesData.forEach(sale => {
-        const saleElement = document.createElement("div");
-        saleElement.classList.add("sale-entry");
-
-        const items = JSON.parse(sale.attributes.items);
-        const itemsDetails = getItemDetails(items);
-
-        saleElement.innerHTML = `
-            <p>${new Date(sale.attributes.timestamp).toLocaleString()}</p>
-            <p>${itemsDetails}</p>
-            <p>合計: ¥${sale.attributes.total}</p>
-        `;
-        salesHistory.appendChild(saleElement);
+        salesHistory.appendChild(createSaleEntry(sale));
+        totalSalesAmount += sale.attributes.total;
     });
+
+    overallSales.innerHTML = `<h3>全体の売上合計: ¥${totalSalesAmount}</h3>`;
 }
 
-function getItemDetails(items) {
+function createSaleEntry(sale) {
+    const saleElement = document.createElement("div");
+    saleElement.classList.add("sale-entry");
+
+    const items = JSON.parse(sale.attributes.items);
+    const itemsDetails = formatItemDetails(items);
+
+    saleElement.innerHTML = `
+        <p>${new Date(sale.attributes.timestamp).toLocaleString()}</p>
+        <p>${itemsDetails}</p>
+        <p>合計: ¥${sale.attributes.total}</p>
+    `;
+    return saleElement;
+}
+
+function formatItemDetails(items) {
     const itemCounts = items.reduce((acc, item) => {
         if (acc[item.name]) {
             acc[item.name].count += 1;
@@ -186,4 +238,16 @@ function getItemDetails(items) {
     return Object.entries(itemCounts)
         .map(([name, { price, count }]) => `${name} - ¥${price} x ${count}`)
         .join('<br>');
+}
+
+
+// Format Date
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
