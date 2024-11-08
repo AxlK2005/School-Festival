@@ -118,11 +118,17 @@ async function checkout() {
     }
 
     try {
+        // Convert items array into a JSON string before saving
+        const formattedItems = JSON.stringify(cart.map(item => ({
+            name: item.name,
+            price: item.price
+        })));
+
         await RKZ.Data.add({
             object_id: 'sales',
             name: "会計データ",
             attributes: {
-                items: cart,
+                items: formattedItems,
                 total,
                 timestamp: formatDate(new Date()),
             }
