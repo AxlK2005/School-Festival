@@ -99,6 +99,15 @@ function addToCart(productId, productName, price) {
     alert(`${productName} をカートに追加しました`);
 }
 
+function formatDate(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
+
 // Checkout Process
 async function checkout() {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
@@ -111,13 +120,14 @@ async function checkout() {
     try {
         await RKZ.Data.add({
             object_id: 'sales',
+            name: "会計データ",
             attributes: {
                 items: cart,
                 total,
-                timestamp: new Date().toISOString()
+                timestamp: formatDate(new Date())
             }
         });
-        alert(`会計が完了しました！合計: ¥{total}`);
+        alert(`会計が完了しました！合計: ¥${total}`);
         cart = [];
         loadProductList();
     } catch (error) {
