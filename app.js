@@ -14,6 +14,20 @@ async function main() {
     }
 }
 
+// Render header dynamically
+function renderHeader() {
+    document.querySelector("header").innerHTML = `
+        <h1>学園祭アプリ</h1>
+        <nav aria-label="Page navigation">
+            <ul>
+                <li><a href="cashier.html">レジ</a></li>
+                <li><a href="register.html">商品登録</a></li>
+                <li><a href="sales.html">販売履歴</a></li>
+            </ul>
+        </nav>
+    `;
+}
+
 // 商品登録機能
 async function registerProduct() {
     const name = document.getElementById("productName").value;
