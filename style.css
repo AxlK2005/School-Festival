@@ -150,14 +150,15 @@ form input {
 /* Media queries for mobile responsiveness */
 @media (max-width: 600px) {
     header h1, h1 {
-        font-size: 1.4rem;
+        font-size: 1.2rem;
     }
 
-    button {
-        font-size: 0.9rem;
+    .container {
+        flex-direction: column;
     }
 
     .card {
-        width: 90%;
+        width: 100%;
+        padding: 15px;
     }
 }
