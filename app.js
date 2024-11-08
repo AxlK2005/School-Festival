@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", initApp);
 async function initApp() {
     try {
         await initSDK();
+        renderHeader();
         loadProductList();
         loadSalesHistory();
     } catch (error) {
@@ -21,10 +22,12 @@ async function initSDK() {
 
 // Render header dynamically
 function renderHeader() {
-    document.querySelector("header").innerHTML = `
+    const header = document.querySelector("header");
+    header.innerHTML = `
         <h1>学園祭アプリ</h1>
         <nav aria-label="Page navigation">
             <ul>
+                <li><a href="index.html">ホーム</a></li>
                 <li><a href="cashier.html">レジ</a></li>
                 <li><a href="register.html">商品登録</a></li>
                 <li><a href="sales.html">販売履歴</a></li>
@@ -96,6 +99,7 @@ function addToCart(productId, productName, price) {
     alert(`${productName} をカートに追加しました`);
 }
 
+// Checkout Process
 async function checkout() {
     const total = cart.reduce((sum, item) => sum + item.price, 0);
 
@@ -140,9 +144,9 @@ function renderSalesHistory(salesData) {
     salesData.forEach(sale => {
         const saleElement = document.createElement("div");
         saleElement.classList.add("sale-entry");
-        saleEntry.innerHTML = `
-            <p>日時: ${new Date(sale.timestamp).toLocaleString()}</p>
-            <p>合計: ¥${sale.total}</p>
+        saleElement.innerHTML = `
+            <p>日時: ${new Date(sale.attributes.timestamp).toLocaleString()}</p>
+            <p>合計: ¥${sale.attributes.total}</p>
         `;
         salesHistory.appendChild(saleElement);
     });

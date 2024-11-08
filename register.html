@@ -6,19 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <script src="https://unpkg.com/baasatrakuza" defer></script>
-    <script src="app.js"></script>
+    <script src="app.js" defer></script>
     <title>商品登録</title>
 </head>
 
 <body>
     <header aria-label="Main navigation"></header>
-    <script> renderHeader(); </script>
-    <form id="register-form">
-        <input type="text" id="productName" placeholder="商品名">
-        <input type="number" id="productPrice" placeholder="価格">
-        <input type="number" id="productQuantity" placeholder="数量">
-        <button type="button" onclick="registerProduct()">登録</button>
-    </form>
+    <main>
+        <h1>商品登録</h1>
+        <form id="register-form" aria-label="Product Registration Form">
+            <label for="productName">商品名:</label>
+            <input type="text" id="productName" placeholder="商品名">
+
+            <label for="productPrice">価格:</label>
+            <input type="number" id="productPrice" placeholder="価格">
+
+            <label for="productQuantity">数量:</label>
+            <input type="number" id="productQuantity" placeholder="数量">
+
+            <button type="button" onclick="registerProduct()">登録</button>
+        </form>
+    </main>
 </body>
 
 </html>
