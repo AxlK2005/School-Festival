@@ -204,7 +204,7 @@ function renderSalesHistory(salesData) {
     let totalSalesAmount = 0;
     salesData.forEach(sale => {
         salesHistory.appendChild(createSaleEntry(sale));
-        totalSalesAmount += sale.attributes.total;
+        totalSalesAmount += parseFloat(sale.attributes.total);
     });
 
     overallSales.innerHTML = `<h3>全体の売上合計: ¥${totalSalesAmount}</h3>`;
