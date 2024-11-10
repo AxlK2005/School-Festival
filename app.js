@@ -73,6 +73,7 @@ async function loadProductList() {
 function renderProductList(products) {
     const productList = document.getElementById("product-list");
     productList.innerHTML = '';
+    const fragment = document.createDocumentFragment();
 
     products.forEach(product => {
         const productElement = document.createElement("div");
@@ -82,8 +83,9 @@ function renderProductList(products) {
             <input type="number" min="1" value="1" class="quantity-input" id="quantity-${product.code}" placeholder="数量">
             <button class="add-to-cart-btn" onclick="addToCart('${product.code}', '${product.name}', ${product.attributes.price})">追加</button>
         `;
-        productList.appendChild(productElement);
+        fragment.appendChild(productElement);
     });
+    productList.appendChild(fragment);
 }
 
 // Cart Management
@@ -91,12 +93,10 @@ let cart = [];
 
 function addToCart(productId, productName, price) {
     const quantity = getQuantityInput(productId);
-
     if (quantity <= 0) {
         alert("正しい数量を入力してください");
         return;
     }
-
     addItemToCart(productId, productName, price, quantity);
     alert(`${productName} を ${quantity}個カートに追加しました`);
     renderCart();
@@ -107,8 +107,11 @@ function getQuantityInput(productId) {
 }
 
 function addItemToCart(productId, productName, price, quantity) {
-    for (let i = 0; i < quantity; i++) {
-        cart.push({ id: productId, name: productName, price });
+    const existingItem = cart.find(item => item.id === productId);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({ id: productId, name: productName, price, quantity });
     }
 }
 
@@ -119,18 +122,7 @@ function renderCart() {
 }
 
 function formatCartItems() {
-    const itemCounts = cart.reduce((acc, item) => {
-        if (acc[item.name]) {
-            acc[item.name].count += 1;
-        } else {
-            acc[item.name] = { price: item.price, count: 1 };
-        }
-        return acc;
-    }, {});
-
-    return Object.entries(itemCounts)
-        .map(([name, { price, count }]) => `<p>${name} - ¥${price} x ${count}</p>`)
-        .join('');
+    return cart.map(item => `<p>${item.name} - ¥${item.price} x ${item.quantity}</p>`).join('');
 }
 
 // Checkout Process
@@ -154,7 +146,7 @@ async function checkout() {
 }
 
 function calculateTotal() {
-    return cart.reduce((sum, item) => sum + item.price, 0);
+    return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 }
 
 async function processCheckout(total) {
@@ -162,7 +154,7 @@ async function processCheckout(total) {
         object_id: 'sales',
         name: "会計データ",
         attributes: {
-            items: JSON.stringify(cart.map(item => ({ name: item.name, price: item.price }))),
+            items: JSON.stringify(cart.map(item => ({ name: item.name, price: item.price, quantity: item.quantity }))),
             total,
             timestamp: formatDate(new Date())
         }
@@ -209,20 +201,8 @@ function createSaleEntry(sale) {
 }
 
 function formatItemDetails(items) {
-    const itemCounts = items.reduce((acc, item) => {
-        if (acc[item.name]) {
-            acc[item.name].count += 1;
-        } else {
-            acc[item.name] = { price: item.price, count: 1 };
-        }
-        return acc;
-    }, {});
-
-    return Object.entries(itemCounts)
-        .map(([name, { price, count }]) => `${name} - ¥${price} x ${count}`)
-        .join('<br>');
+    return items.map(({ name, price, quantity }) => `${name} - ¥${price} x ${quantity}`).join('<br>');
 }
-
 
 // Format Date
 function formatDate(date) {
