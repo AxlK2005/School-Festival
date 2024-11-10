@@ -4,7 +4,6 @@ document.addEventListener("DOMContentLoaded", initApp);
 async function initApp() {
     try {
         await initSDK();
-        renderHeader();
         await loadProductList();
         await loadSalesHistory();
     } catch (error) {
@@ -18,22 +17,6 @@ async function initSDK() {
     RKZ.config.appAuthPassword = '7e38pBSP';
     await RKZ.init('bp.dfe961aeed90d0de45399e988ae2e069ee827bfc');
     console.log('SDK initialized successfully');
-}
-
-// Render Header
-function renderHeader() {
-    const header = document.querySelector("header");
-    header.innerHTML = `
-        <h1>学園祭アプリ</h1>
-        <nav aria-label="Page navigation">
-            <ul>
-                <li><a href="index.html">ホーム</a></li>
-                <li><a href="cashier.html">レジ</a></li>
-                <li><a href="register.html">商品登録</a></li>
-                <li><a href="sales.html">販売履歴</a></li>
-            </ul>
-        </nav>
-    `;
 }
 
 // Product Registration
