@@ -119,10 +119,26 @@ function addItemToCart(productId, productName, price, quantity) {
 function renderCart() {
     const cartSection = document.getElementById("cart");
     cartSection.innerHTML = cart.length === 0 ? '<p>カートは空です</p>' : formatCartItems();
+    renderCartTotal(); // Display cart total
 }
 
 function formatCartItems() {
     return cart.map(item => `<p>${item.name} - ¥${item.price} x ${item.quantity}</p>`).join('');
+}
+
+// Calculate and Display Cart Total
+function renderCartTotal() {
+    const total = calculateTotal();
+    const cartTotalSection = document.getElementById("cart-total");
+
+    if (!cartTotalSection) {
+        const newTotalSection = document.createElement("div");
+        newTotalSection.id = "cart-total";
+        newTotalSection.innerHTML = `<p>合計: ¥${total}</p>`;
+        document.querySelector("main").appendChild(newTotalSection);
+    } else {
+        cartTotalSection.innerHTML = `<p>合計: ¥${total}</p>`;
+    }
 }
 
 // Checkout Process
@@ -137,7 +153,11 @@ async function checkout() {
     try {
         await processCheckout(total);
         alert(`会計が完了しました！合計: ¥${total}`);
+
         cart = [];
+        renderCart();
+        renderCartTotal();
+
         await loadProductList();
     } catch (error) {
         console.error("会計に失敗しました", error);
