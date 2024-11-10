@@ -115,15 +115,46 @@ function addItemToCart(productId, productName, price, quantity) {
     }
 }
 
+// Remove Item from Cart
+function removeFromCart(productId) {
+    const itemIndex = cart.findIndex(item => item.id === productId);
+
+    if (itemIndex !== -1) {
+        cart.splice(itemIndex, 1);
+        alert("商品がカートから削除されました");
+        renderCart();
+        renderCartTotal();
+    } else {
+        alert("カートにその商品が見つかりません");
+    }
+}
+
 // Render Cart
 function renderCart() {
     const cartSection = document.getElementById("cart");
     cartSection.innerHTML = cart.length === 0 ? '<p>カートは空です</p>' : formatCartItems();
-    renderCartTotal(); // Display cart total
+    renderCartTotal();
 }
 
+// Format Cart Items
 function formatCartItems() {
-    return cart.map(item => `<p>${item.name} - ¥${item.price} x ${item.quantity}</p>`).join('');
+    const itemCounts = cart.reduce((acc, item) => {
+        if (acc[item.name]) {
+            acc[item.name].count += 1;
+        } else {
+            acc[item.name] = { id: item.id, price: item.price, count: 1 };
+        }
+        return acc;
+    }, {});
+
+    return Object.entries(itemCounts)
+        .map(([name, { id, price, count }]) => `
+            <p>
+                ${name} - ¥${price} x ${count} 
+                <button onclick="removeFromCart('${id}')">削除</button>
+            </p>
+        `)
+        .join('');
 }
 
 // Calculate and Display Cart Total
