@@ -96,7 +96,9 @@ button:hover {
     transform: translateY(-1px);
 }
 
-#product-list, #cart, #sales-history {
+#product-list,
+#cart,
+#sales-history {
     margin-top: 1em;
     padding: 15px;
     border: 1px solid var(--border-color);
@@ -104,7 +106,8 @@ button:hover {
     background-color: var(--card-background-color);
 }
 
-.product-item, .sale-entry {
+.product-item,
+.sale-entry {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
@@ -122,6 +125,54 @@ button:hover {
     gap: 10px;
 }
 
+.tab__menu {
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding: 0;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab__menu-item {
+    list-style: none;
+    width: 200px;
+    padding: 12px 15px;
+    text-align: center;
+    background-color: #f4f7fa;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    font-weight: 500;
+}
+
+.tab__menu-item:hover {
+    background-color: var(--secondary-color);
+    color: #ffffff;
+}
+
+.tab__menu-item.is-active {
+    background-color: var(--primary-color);
+    color: #ffffff;
+    border-radius: var(--border-radius) var(--border-radius) 0 0;
+    padding: 14px 15px;
+}
+
+.tab__panel {
+    width: 100%;
+    background-color: var(--card-background-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px var(--shadow-light);
+}
+
+.tab__panel-box {
+    display: none;
+    padding: 20px;
+}
+
+.tab__panel-box.is-show {
+    display: block;
+}
 
 /* Larger Screens Adjustments */
 @media (min-width: 768px) {
@@ -131,7 +182,8 @@ button:hover {
         align-items: center;
     }
 
-    header, main {
+    header,
+    main {
         max-width: 600px;
     }
 
@@ -150,5 +202,17 @@ button:hover {
 
     button {
         padding: 12px 18px;
+    }
+
+    .tab {
+        max-width: 900px;
+    }
+
+    .tab__menu-item {
+        font-size: 1.1rem;
+    }
+
+    .tab__panel-box {
+        padding: 30px;
     }
 }
