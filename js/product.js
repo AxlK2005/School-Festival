@@ -56,6 +56,8 @@ function renderProductList(products) {
     productList.innerHTML = '';
     const fragment = document.createDocumentFragment();
 
+    const isProductPage = window.location.pathname.includes("product.html");
+
     products.forEach(product => {
         const productElement = document.createElement("div");
         productElement.classList.add("product-item");
@@ -64,6 +66,13 @@ function renderProductList(products) {
             <span>${product.name} - ¥${product.attributes.price}</span>
         `;
 
+        if (isProductPage) {
+            const deleteButton = document.createElement("button");
+            deleteButton.textContent = "削除";
+            deleteButton.onclick = () => deleteProduct(product.code);
+            productElement.appendChild(deleteButton);
+        }
+
         productElement.addEventListener("click", () => {
             addToCart(product.code, product.name, product.attributes.price, 1);
         });
@@ -71,4 +80,21 @@ function renderProductList(products) {
         fragment.appendChild(productElement);
     });
     productList.appendChild(fragment);
+}
+
+async function deleteProduct(code) {
+    try {
+        await deleteProductFromDatabase(code);
+        alert("商品を削除しました！");
+        await loadProductList();
+    } catch (error) {
+        console.error("商品削除に失敗しました", error);
+        alert("商品削除に失敗しました。");
+    }
+}
+
+async function deleteProductFromDatabase(code) {
+    await RKZ.Data.query('product')
+        .equalTo('code', code)
+        .delete();
 }
