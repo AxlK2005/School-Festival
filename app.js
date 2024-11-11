@@ -78,11 +78,15 @@ function renderProductList(products) {
     products.forEach(product => {
         const productElement = document.createElement("div");
         productElement.classList.add("product-item");
+
         productElement.innerHTML = `
             <span>${product.name} - ¥${product.attributes.price}</span>
-            <input type="number" min="1" value="1" class="quantity-input" id="quantity-${product.code}" placeholder="数量">
-            <button class="add-to-cart-btn" onclick="addToCart('${product.code}', '${product.name}', ${product.attributes.price})">追加</button>
         `;
+
+        productElement.addEventListener("click", () => {
+            addToCart(product.code, product.name, product.attributes.price, 1);
+        });
+
         fragment.appendChild(productElement);
     });
     productList.appendChild(fragment);
@@ -91,14 +95,8 @@ function renderProductList(products) {
 // Cart Management
 let cart = [];
 
-function addToCart(productId, productName, price) {
-    const quantity = getQuantityInput(productId);
-    if (quantity <= 0) {
-        alert("正しい数量を入力してください");
-        return;
-    }
+function addToCart(productId, productName, price, quantity = 1) {
     addItemToCart(productId, productName, price, quantity);
-    alert(`${productName} を ${quantity}個カートに追加しました`);
     renderCart();
 }
 
