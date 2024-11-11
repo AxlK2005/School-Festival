@@ -138,20 +138,11 @@ function renderCart() {
 
 // Format Cart Items
 function formatCartItems() {
-    const itemCounts = cart.reduce((acc, item) => {
-        if (acc[item.name]) {
-            acc[item.name].count += 1;
-        } else {
-            acc[item.name] = { id: item.id, price: item.price, count: 1 };
-        }
-        return acc;
-    }, {});
-
-    return Object.entries(itemCounts)
-        .map(([name, { id, price, count }]) => `
+    return cart
+        .map(item => `
             <p>
-                ${name} - ¥${price} x ${count} 
-                <button onclick="removeFromCart('${id}')">削除</button>
+                ${item.name} - ¥${item.price} x ${item.quantity} 
+                <button onclick="removeFromCart('${item.id}')">削除</button>
             </p>
         `)
         .join('');
@@ -196,6 +187,7 @@ async function checkout() {
     }
 }
 
+// Calculate Total Price
 function calculateTotal() {
     return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
 }
