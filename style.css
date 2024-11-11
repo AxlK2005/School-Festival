@@ -116,38 +116,6 @@ button:hover {
     margin-top: 10px;
 }
 
-.quantity-input {
-    width: 50px;
-    padding: 5px;
-    text-align: center;
-}
-
-input[type="text"], input[type="number"] {
-    padding: 10px;
-    margin: 5px 0 10px;
-    border-radius: var(--border-radius);
-    border: 1px solid var(--border-color);
-    width: calc(100% - 20px);
-    transition: box-shadow 0.2s;
-}
-
-input:focus {
-    border-color: var(--primary-color);
-    box-shadow: 0 0 8px var(--shadow-light);
-}
-
-.add-to-cart-btn {
-    background-color: var(--button-bg-color);
-    color: var(--button-text-color);
-    padding: 7px 12px;
-    font-size: 0.9em;
-}
-
-.add-to-cart-btn:hover {
-    background-color: var(--secondary-color);
-    box-shadow: 0 3px 6px var(--shadow-dark);
-}
-
 #register-form {
     display: flex;
     flex-direction: column;
