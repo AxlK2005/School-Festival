@@ -15,32 +15,36 @@ async function loadSalesHistory() {
 function renderSalesHistory(salesData) {
     const salesHistory = document.getElementById("sales-history");
     const overallSales = document.getElementById("overall-sales");
-    salesHistory.innerHTML = '';
+    const salesTable = document.getElementById("sales-table").getElementsByTagName('tbody')[0];
+
+    salesTable.innerHTML = '';
 
     let totalSalesAmount = 0;
+
     salesData.forEach(sale => {
-        salesHistory.appendChild(createSaleEntry(sale));
+        const saleRow = createSaleEntry(sale);
+        salesTable.appendChild(saleRow);
         totalSalesAmount += parseFloat(sale.attributes.total);
     });
 
-    overallSales.innerHTML = `<h3>全体の売上合計: ¥${totalSalesAmount}</h3>`;
+    overallSales.querySelector('p').innerHTML = `全体の売上合計: ¥${totalSalesAmount.toLocaleString()}`;
 }
 
 function createSaleEntry(sale) {
-    const saleElement = document.createElement("div");
-    saleElement.classList.add("sale-entry");
+    const row = document.createElement("tr");
 
     const items = JSON.parse(sale.attributes.items);
     const itemsDetails = formatItemDetails(items);
 
-    saleElement.innerHTML = `
-        <p>${new Date(sale.attributes.timestamp).toLocaleString()}</p>
-        <p>${itemsDetails}</p>
-        <p>合計: ¥${sale.attributes.total}</p>
+    row.innerHTML = `
+        <td>${new Date(sale.attributes.timestamp).toLocaleString()}</td>
+        <td>${itemsDetails}</td>
+        <td>¥${sale.attributes.total}</td>
     `;
-    return saleElement;
+
+    return row;
 }
 
 function formatItemDetails(items) {
-    return items.map(({ name, price, quantity }) => `${name} - ¥${price} x ${quantity}`).join('<br>');
+    return items.map(({ name, price, quantity }) => `${name} - ¥${price} x ${quantity}`).join(', ');
 }

@@ -25,8 +25,25 @@
     </header>
     <main>
         <h1>販売履歴</h1>
-        <section id="overall-sales">合計売上がここに表示されます</section>
-        <section id="sales-history">販売履歴がここに表示されます</section>
+        <section id="overall-sales">
+            <h3>合計売上</h3>
+            <p>全体の売上合計: ¥0</p>
+        </section>
+        <section id="sales-history">
+            <h3>販売履歴</h3>
+            <table id="sales-table">
+                <thead>
+                    <tr>
+                        <th>販売日時</th>
+                        <th>商品</th>
+                        <th>合計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Sales entries will be dynamically inserted here -->
+                </tbody>
+            </table>
+        </section>
     </main>
 </body>
 
