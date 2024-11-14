@@ -9,7 +9,8 @@
     <script src="js/script.js" defer></script>
     <script src="https://unpkg.com/baasatrakuza"></script>
     <script src="js/sdk.js" defer></script>
-    <script src="js/product.js" defer></script>
+    <script src="js/store.js" defer></script>
+    <title>Cash Register</title>
 </head>
 
 <body>
@@ -30,7 +31,7 @@
                     <i class='bx bx-home-alt-2'></i>
                     <a href="index.html">Overview</a>
                 </div>
-                <div class="item">
+                <div class="item" id="active">
                     <i class='bx bx-store'></i>
                     <a href="store.html">Store</a>
                 </div>
@@ -38,7 +39,7 @@
                     <i class='bx bx-grid-alt'></i>
                     <a href="analytic.html">Analytic</a>
                 </div>
-                <div class="item" id="active">
+                <div class="item">
                     <i class='bx bx-package'></i>
                     <a href="product.html">Product</a>
                 </div>
@@ -64,7 +65,7 @@
 
             <div class="separator">
                 <div class="info">
-                    <h3>Product Management</h3>
+                    <h3>Cash Register</h3>
                 </div>
                 <div class="search">
                     <i class='bx bx-search'></i>
@@ -73,57 +74,67 @@
             </div>
 
             <div class="content">
-                <h3>Manage Products</h3>
-                <div class="product-management">
-                    <!-- Product List -->
-                    <div class="product-list">
-                        <h4>Product List</h4>
-                        <p id="product-list">
-                            <!-- Product items will be dynamically added here -->
-                        </p>
+                <h3>Point of Sale</h3>
+                <div class="register">
+                    <!-- Product Selection -->
+                    <section id="product-list">商品一覧がここに表示されます</section>
+
+                    <!-- Quantity Input -->
+                    <div class="quantity">
+                        <label for="quantity">Quantity:</label>
+                        <input type="number" id="quantity" name="quantity" min="1" value="1">
                     </div>
+
+                    <!-- Add to Cart Button -->
+                    <button onclick="addToCart()">Add to Cart</button>
+
                 </div>
             </div>
         </main>
 
         <aside class="right-section">
 
-            <h4>Register Product</h4>
-            <form id="register-form">
-                <label for="productName">Product Name:</label>
-                <input type="text" id="productName" placeholder="Enter product name" required>
-
-                <label for="productPrice">Price (¥):</label>
-                <input type="number" id="productPrice" placeholder="Enter price" min="0" required>
-
-                <label for="productQuantity">Quantity:</label>
-                <input type="number" id="productQuantity" placeholder="Enter quantity" min="1" required>
-
-                <button type="button" onclick="registerProduct()">Register</button>
-            </form>
+            <section id="cart">
+                <h4>Cart</h4>
+                <div id="cart-items">
+                    <p>カートは空です</p>
+                </div>
+                <div id="cart-total">
+                    <p>合計: ¥0</p>
+                </div>
+                <button onclick="checkout()">Checkout</button>
+            </section>
 
         </aside>
 
     </div>
 
     <script>
-        function addProduct(event) {
-            event.preventDefault();
+        let totalAmount = 0;
 
-            const name = document.getElementById('product-name').value;
-            const price = document.getElementById('product-price').value;
+        function addToCart() {
+            const productSelect = document.getElementById('product');
+            const selectedProduct = productSelect.options[productSelect.selectedIndex];
+            const productName = selectedProduct.text;
+            const productPrice = parseFloat(selectedProduct.getAttribute('data-price'));
+            const quantity = parseInt(document.getElementById('quantity').value);
 
-            const productList = document.getElementById('product-list');
+            const itemTotal = productPrice * quantity;
+            totalAmount += itemTotal;
+
+            const cartItems = document.getElementById('cart-items');
             const listItem = document.createElement('li');
-            listItem.innerHTML = `${name} - ¥${price} <button onclick="deleteProduct(this)">Delete</button>`;
-            productList.appendChild(listItem);
+            listItem.textContent = `${productName} x ${quantity} = ¥${itemTotal}`;
+            cartItems.appendChild(listItem);
 
-            document.getElementById('product-form').reset();
+            document.getElementById('total-amount').textContent = totalAmount;
         }
 
-        function deleteProduct(button) {
-            const productItem = button.parentElement;
-            productItem.remove();
+        function checkout() {
+            alert(`Total amount: ¥${totalAmount}`);
+            document.getElementById('cart-items').innerHTML = '';
+            totalAmount = 0;
+            document.getElementById('total-amount').textContent = totalAmount;
         }
     </script>
 </body>

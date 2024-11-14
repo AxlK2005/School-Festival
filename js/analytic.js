@@ -13,12 +13,10 @@ async function loadSalesHistory() {
 }
 
 function renderSalesHistory(salesData) {
-    const salesHistory = document.getElementById("sales-history");
-    const overallSales = document.getElementById("overall-sales");
     const salesTable = document.getElementById("sales-table").getElementsByTagName('tbody')[0];
+    const overallSales = document.getElementById("overall-sales").querySelector("p");
 
     salesTable.innerHTML = '';
-
     let totalSalesAmount = 0;
 
     salesData.forEach(sale => {
@@ -27,12 +25,11 @@ function renderSalesHistory(salesData) {
         totalSalesAmount += parseFloat(sale.attributes.total);
     });
 
-    overallSales.querySelector('p').innerHTML = `全体の売上合計: ¥${totalSalesAmount.toLocaleString()}`;
+    overallSales.innerHTML = `全体の売上合計: ¥${totalSalesAmount.toLocaleString()}`;
 }
 
 function createSaleEntry(sale) {
     const row = document.createElement("tr");
-
     const items = JSON.parse(sale.attributes.items);
     const itemsDetails = formatItemDetails(items);
 
@@ -41,7 +38,6 @@ function createSaleEntry(sale) {
         <td>${itemsDetails}</td>
         <td>¥${sale.attributes.total}</td>
     `;
-
     return row;
 }
 

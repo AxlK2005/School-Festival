@@ -1,6 +1,39 @@
 document.addEventListener("DOMContentLoaded", async () => {
     await initSDK();
+    await loadProductList();
 });
+
+async function loadProductList() {
+    try {
+        const products = await RKZ.Data.query('product').find();
+        renderProductList(products.data);
+    } catch (error) {
+        console.error("商品情報の取得に失敗しました", error);
+    }
+}
+
+function renderProductList(products) {
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = '';
+    const fragment = document.createDocumentFragment();
+
+    products.forEach(product => {
+        const productElement = document.createElement("div");
+        productElement.classList.add("product-item");
+
+        productElement.innerHTML = `
+            <span>${product.name} - ¥${product.attributes.price}</span>
+        `;
+
+        productElement.addEventListener("click", () => {
+            addToCart(product.code, product.name, product.attributes.price, 1);
+        });
+
+
+        fragment.appendChild(productElement);
+    });
+    productList.appendChild(fragment);
+}
 
 let cart = [];
 
@@ -19,8 +52,6 @@ async function checkout() {
         cart = [];
         renderCart();
         renderCartTotal();
-
-        await loadProductList();
     } catch (error) {
         console.error("会計に失敗しました", error);
         alert("会計に失敗しました。再試行してください。");
@@ -54,7 +85,7 @@ function formatDate(date) {
 }
 
 function renderCart() {
-    const cartSection = document.getElementById("cart");
+    const cartSection = document.getElementById("cart-items");
     cartSection.innerHTML = cart.length === 0 ? '<p>カートは空です</p>' : formatCartItems();
     renderCartTotal();
 }

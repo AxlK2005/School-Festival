@@ -4,33 +4,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
-    <link rel="stylesheet" href="style.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js.script.js" defer></script>
     <script src="https://unpkg.com/baasatrakuza"></script>
-    <script src="js/sdk.js" defer></script>
-    <script src="js/hamburger.js"></script>
-    <title>学園祭アプリ - ホーム</title>
 </head>
 
 <body>
-    <header>
-        <h1>学園祭アプリ</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html" class="is-active">ホーム</a></li>
-                <li><a href="cart.html">レジ</a></li>
-                <li><a href="product.html">商品</a></li>
-                <li><a href="sales.html">販売履歴</a></li>
-            </ul>
-        </nav>
-        <button class="hamburger">
-            <span class="material-symbols-rounded hamburger-icon">menu</span>
-        </button>
-    </header>
-    <main>
-        <h1>学園祭アプリへようこそ！</h1>
-        <p>学園祭をもっと楽しく、便利にするためのアプリです。</p>
-    </main>
+    <div class="container">
+
+        <aside class="left-section">
+
+            <div class="logo">
+                <button class="menu-btn" id="menu-close">
+                    <i class='bx bx-log-out-circle'></i>
+                </button>
+                <img src="assets/logo.png">
+                <a href="#">LogoName</a>
+            </div>
+
+            <div class="sidebar">
+                <div class="item" id="active">
+                    <i class='bx bx-home-alt-2'></i>
+                    <a href="index.html">Overview</a>
+                </div>
+                <div class="item">
+                    <i class='bx bx-store'></i>
+                    <a href="store.html">Store</a>
+                </div>
+                <div class="item">
+                    <i class='bx bx-grid-alt'></i>
+                    <a href="analytic.html">Analytic</a>
+                </div>
+                <div class="item">
+                    <i class='bx bx-package'></i>
+                    <a href="product.html">Product</a>
+                </div>
+                <div class="item">
+                    <i class='bx bx-message-square-dots'></i>
+                    <a href="message.html">Message</a>
+                </div>
+                <div class="item">
+                    <i class='bx bx-cog'></i>
+                    <a href="setting.html">Setting</a>
+                </div>
+            </div>
+
+        </aside>
+
+        <main>
+            <header>
+                <button class="menu-btn" id="menu-open">
+                    <i class='bx bx-menu'></i>
+                </button>
+                <h5>Hello <b>User</b>, welcome back!</h5>
+            </header>
+
+            <div class="separator">
+                <div class="info">
+                    <h3>Analytics</h3>
+                    <a href="#">View All</a>
+                </div>
+                <div class="search">
+                    <i class='bx bx-search'></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+            </div>
+
+            <div class="analytics">
+                <div class="item">
+                    <div class="progress">
+                        <div class="info">
+                            <h5>Sales</h5>
+                            <p></p>
+                        </div>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                            aria-valuemax="100"></div>
+                    </div>
+                    <i class='bx bx-yen'></i>
+                </div>
+                <div class="item">
+                    <div class="progress">
+                        <div class="info">
+                            <h5>Customers</h5>
+                            <p></p>
+                        </div>
+                        <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0"
+                            aria-valuemax="100"></div>
+                    </div>
+                    <i class='bx bx-user'></i>
+                </div>
+            </div>
+
+            <div class="separator">
+                <div class="info">
+                    <h3>Planning</h3>
+                    <a href="#">View All</a>
+                </div>
+                <input type="date" value="2023-10-15">
+            </div>
+
+            <div class="planning">
+                <div class="item">
+                    <div class="left">
+                        <div class="icon">
+                            <i class='bx bx-book-alt'></i>
+                        </div>
+                        <div class="details">
+                            <h5>Reading - Topic 1</h5>
+                            <p>8:00 - 10:00</p>
+                        </div>
+                    </div>
+                    <i class='bx bx-dots-vertical-rounded'></i>
+                </div>
+                <div class="item">
+                    <div class="left">
+                        <div class="icon">
+                            <i class='bx bx-edit-alt'></i>
+                        </div>
+                        <div class="details">
+                            <h5>Writing - Topic 2</h5>
+                            <p>13:00 - 14:00</p>
+                        </div>
+                    </div>
+                    <i class='bx bx-dots-vertical-rounded'></i>
+                </div>
+                <div class="item">
+                    <div class="left">
+                        <div class="icon">
+                            <i class='bx bx-headphone'></i>
+                        </div>
+                        <div class="details">
+                            <h5>Listening - Topic 1</h5>
+                            <p>15:00 - 16:00</p>
+                        </div>
+                    </div>
+                    <i class='bx bx-dots-vertical-rounded'></i>
+                </div>
+                <div class="item">
+                    <div class="left">
+                        <div class="icon">
+                            <i class='bx bx-volume-low'></i>
+                        </div>
+                        <div class="details">
+                            <h5>Listening - Topic 2</h5>
+                            <p>19:00 - 20:00</p>
+                        </div>
+                    </div>
+                    <i class='bx bx-dots-vertical-rounded'></i>
+                </div>
+            </div>
+        </main>
+
+        <aside class="right-section">
+            <div class="top">
+                <i class='bx bx-bell'></i>
+                <div class="profile">
+                    <div class="left">
+                        <img src="assets/profile.jpg">
+                        <div class="user">
+                            <h5>User</h5>
+                            <a href="#"></a>
+                        </div>
+                    </div>
+                    <i class='bx bxs-chevron-right'></i>
+                </div>
+            </div>
+
+            <div class="separator" id="first">
+                <h4>Statistics</h4>
+            </div>
+
+            <div class="stats">
+                <div class="item">
+                    <div class="top">
+                        <p>Orders</p>
+                        <p>Completed</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="line"></div>
+                        <h3>0</h3>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="top">
+                        <p>Money</p>
+                        <p>Gained</p>
+                    </div>
+                    <div class="bottom">
+                        <div class="line"></div>
+                        <h3>0</h3>
+                    </div>
+                </div>
+            </div>
+
+        </aside>
+
+    </div>
 </body>
 
 </html>

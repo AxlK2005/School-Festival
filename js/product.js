@@ -56,9 +56,6 @@ function renderProductList(products) {
     productList.innerHTML = '';
     const fragment = document.createDocumentFragment();
 
-    const isCartPage = window.location.pathname.includes("cart.html");
-    const isProductPage = window.location.pathname.includes("product.html");
-
     products.forEach(product => {
         const productElement = document.createElement("div");
         productElement.classList.add("product-item");
@@ -67,18 +64,10 @@ function renderProductList(products) {
             <span>${product.name} - ¥${product.attributes.price}</span>
         `;
 
-        if (isCartPage) {
-            productElement.addEventListener("click", () => {
-                addToCart(product.code, product.name, product.attributes.price, 1);
-            });
-        }
-
-        if (isProductPage) {
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "削除";
-            deleteButton.onclick = () => deleteProduct(product.code);
-            productElement.appendChild(deleteButton);
-        }
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "削除";
+        deleteButton.onclick = () => deleteProduct(product.code);
+        productElement.appendChild(deleteButton);
 
         fragment.appendChild(productElement);
     });
