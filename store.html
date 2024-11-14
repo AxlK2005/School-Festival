@@ -1,142 +1,169 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/script.js" defer></script>
-    <script src="https://unpkg.com/baasatrakuza"></script>
-    <script src="js/sdk.js" defer></script>
     <script src="js/store.js" defer></script>
-    <title>Cash Register</title>
 </head>
 
 <body>
+
     <div class="container">
-
-        <aside class="left-section">
-
-            <div class="logo">
-                <button class="menu-btn" id="menu-close">
-                    <i class='bx bx-log-out-circle'></i>
-                </button>
-                <img src="assets/logo.png">
-                <a href="#">LogoName</a>
+        <!-- Sidebar Section -->
+        <aside>
+            <div class="toggle">
+                <div class="logo">
+                    <img src="images/logo.png">
+                    <h2>LogoName</h2>
+                </div>
+                <div class="close" id="close-btn">
+                    <span class="material-icons-sharp">
+                        close
+                    </span>
+                </div>
             </div>
 
             <div class="sidebar">
-                <div class="item">
-                    <i class='bx bx-home-alt-2'></i>
-                    <a href="index.html">Overview</a>
-                </div>
-                <div class="item" id="active">
-                    <i class='bx bx-store'></i>
-                    <a href="store.html">Store</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-grid-alt'></i>
-                    <a href="analytic.html">Analytic</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-package'></i>
-                    <a href="product.html">Product</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-message-square-dots'></i>
-                    <a href="message.html">Message</a>
-                </div>
-                <div class="item">
-                    <i class='bx bx-cog'></i>
-                    <a href="setting.html">Setting</a>
-                </div>
+                <a href="store.html">
+                    <span class="material-icons-sharp">
+                        receipt_long
+                    </span>
+                    <h3>Store</h3>
+                </a>
+                <a href="inventory.html">
+                    <span class="material-icons-sharp">
+                        inventory
+                    </span>
+                    <h3>Inventory</h3>
+                </a>
+                <a href="index.html" class="active">
+                    <span class="material-icons-sharp">
+                        insights
+                    </span>
+                    <h3>Analytics</h3>
+                </a>
+                <a href="history.html">
+                    <span class="material-icons-sharp">
+                        receipt_long
+                    </span>
+                    <h3>Orders</h3>
+                </a>
+                <a href="setting.html">
+                    <span class="material-icons-sharp">
+                        settings
+                    </span>
+                    <h3>Settings</h3>
+                </a>
+                <a href="#">
+                    <span class="material-icons-sharp">
+                        logout
+                    </span>
+                    <h3>Logout</h3>
+                </a>
             </div>
-
         </aside>
+        <!-- End of Sidebar Section -->
 
+        <!-- Main Content -->
         <main>
-            <header>
-                <button class="menu-btn" id="menu-open">
-                    <i class='bx bx-menu'></i>
-                </button>
-                <h5>Hello <b>User</b>, welcome back!</h5>
-            </header>
 
-            <div class="separator">
-                <div class="info">
-                    <h3>Cash Register</h3>
-                </div>
-                <div class="search">
-                    <i class='bx bx-search'></i>
-                    <input type="text" placeholder="Search...">
-                </div>
-            </div>
-
-            <div class="content">
-                <h3>Point of Sale</h3>
-                <div class="register">
-                    <!-- Product Selection -->
-                    <section id="product-list">商品一覧がここに表示されます</section>
-
-                    <!-- Quantity Input -->
-                    <div class="quantity">
-                        <label for="quantity">Quantity:</label>
-                        <input type="number" id="quantity" name="quantity" min="1" value="1">
-                    </div>
-
-                    <!-- Add to Cart Button -->
-                    <button onclick="addToCart()">Add to Cart</button>
-
-                </div>
-            </div>
         </main>
+        <!-- End of Main Content -->
 
-        <aside class="right-section">
-
-            <section id="cart">
-                <h4>Cart</h4>
-                <div id="cart-items">
-                    <p>カートは空です</p>
+        <!-- Right Section -->
+        <div class="right-section">
+            <div class="nav">
+                <button id="menu-btn">
+                    <span class="material-icons-sharp">
+                        menu
+                    </span>
+                </button>
+                <div class="dark-mode">
+                    <span class="material-icons-sharp active">
+                        light_mode
+                    </span>
+                    <span class="material-icons-sharp">
+                        dark_mode
+                    </span>
                 </div>
-                <div id="cart-total">
-                    <p>合計: ¥0</p>
-                </div>
-                <button onclick="checkout()">Checkout</button>
-            </section>
 
-        </aside>
+                <div class="profile">
+                    <div class="info">
+                        <p>Hey, <b>Reza</b></p>
+                        <small class="text-muted">Admin</small>
+                    </div>
+                    <div class="profile-photo">
+                        <img src="images/profile-1.jpg">
+                    </div>
+                </div>
+
+            </div>
+            <!-- End of Nav -->
+
+            <div class="reminders">
+                <div class="header">
+                    <h2>Reminders</h2>
+                    <span class="material-icons-sharp">
+                        notifications_none
+                    </span>
+                </div>
+
+                <div class="notification">
+                    <div class="icon">
+                        <span class="material-icons-sharp">
+                            volume_up
+                        </span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Workshop</h3>
+                            <small class="text_muted">
+                                08:00 AM - 12:00 PM
+                            </small>
+                        </div>
+                        <span class="material-icons-sharp">
+                            more_vert
+                        </span>
+                    </div>
+                </div>
+
+                <div class="notification deactive">
+                    <div class="icon">
+                        <span class="material-icons-sharp">
+                            edit
+                        </span>
+                    </div>
+                    <div class="content">
+                        <div class="info">
+                            <h3>Workshop</h3>
+                            <small class="text_muted">
+                                08:00 AM - 12:00 PM
+                            </small>
+                        </div>
+                        <span class="material-icons-sharp">
+                            more_vert
+                        </span>
+                    </div>
+                </div>
+
+                <div class="notification add-reminder">
+                    <div>
+                        <span class="material-icons-sharp">
+                            add
+                        </span>
+                        <h3>Add Reminder</h3>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
 
     </div>
-
-    <script>
-        let totalAmount = 0;
-
-        function addToCart() {
-            const productSelect = document.getElementById('product');
-            const selectedProduct = productSelect.options[productSelect.selectedIndex];
-            const productName = selectedProduct.text;
-            const productPrice = parseFloat(selectedProduct.getAttribute('data-price'));
-            const quantity = parseInt(document.getElementById('quantity').value);
-
-            const itemTotal = productPrice * quantity;
-            totalAmount += itemTotal;
-
-            const cartItems = document.getElementById('cart-items');
-            const listItem = document.createElement('li');
-            listItem.textContent = `${productName} x ${quantity} = ¥${itemTotal}`;
-            cartItems.appendChild(listItem);
-
-            document.getElementById('total-amount').textContent = totalAmount;
-        }
-
-        function checkout() {
-            alert(`Total amount: ¥${totalAmount}`);
-            document.getElementById('cart-items').innerHTML = '';
-            totalAmount = 0;
-            document.getElementById('total-amount').textContent = totalAmount;
-        }
-    </script>
 </body>
 
 </html>

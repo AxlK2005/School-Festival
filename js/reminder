@@ -1,0 +1,61 @@
+document.addEventListener("DOMContentLoaded", async () => {
+    await initApp();
+    await loadReminder();
+});
+
+async function loadReminder() {
+    try {
+        const reminders = await RKZ.Data.query('reminder').find();
+        renderReminder(reminders.data);
+    } catch (error) {
+        console.error("情報の取得に失敗しました", error);
+    }
+}
+
+function renderReminder(reminders) {
+    const remindersList = document.getElementById("reminders");
+
+    reminders.forEach(reminder => {
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        const active = reminder.status;
+        if (!active) notification.classList.add('deactive');
+
+        const iconDiv = document.createElement('div');
+        iconDiv.className = 'icon';
+
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'material-icons-sharp';
+        iconSpan.textContent = active ? 'alarm_on' : 'alarm_off';
+
+        iconDiv.appendChild(iconSpan);
+
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'content';
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'info';
+
+        const title = document.createElement('h3');
+        title.textContent = reminder.name;
+
+        const date = document.createElement('small');
+        date.className = 'text_muted';
+        date.textContent = reminder.date;
+
+        const moreIcon = document.createElement('span');
+        moreIcon.className = 'material-icons-sharp';
+        moreIcon.textContent = 'more_vert';
+
+        infoDiv.appendChild(title);
+        infoDiv.appendChild(date);
+
+        contentDiv.appendChild(infoDiv);
+        contentDiv.appendChild(moreIcon);
+
+        notification.appendChild(iconDiv);
+        notification.appendChild(contentDiv);
+
+        remindersList.insertAdjacentHTML("beforeend", notification);
+    });
+}
